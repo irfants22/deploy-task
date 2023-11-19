@@ -1,0 +1,829 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "Car Rental App with Authentication",
+    "description": "Create a car rental application with REST API using token-based authentication.\n\nMore about the app: [Repository](https://github.com/irfants22/binaracademy/tree/main/chapter-5/restfulapi-with-authentication)",
+    "version": "1.0.11"
+  },
+  "servers": [
+    {
+      "url": "http://127.0.0.1:8000"
+    }
+  ],
+  "tags": [
+    {
+      "name": "home",
+      "description": "Start here"
+    },
+    {
+      "name": "auth",
+      "description": "Operations about auth"
+    },
+    {
+      "name": "user",
+      "description": "User information"
+    },
+    {
+      "name": "car",
+      "description": "Manage your car"
+    }
+  ],
+  "paths": {
+    "/": {
+      "get": {
+        "tags": [
+          "home"
+        ],
+        "summary": "First page",
+        "description": "See your first page here",
+        "operationId": "homePage",
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Home"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/car": {
+      "get": {
+        "tags": [
+          "car"
+        ],
+        "summary": "Get list of cars",
+        "description": "Get all cars",
+        "operationId": "updatePet",
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Car"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        },
+        "security": [
+          {
+            "bearer_token": []
+          }
+        ]
+      },
+      "post": {
+        "tags": [
+          "car"
+        ],
+        "summary": "Add a new car",
+        "description": "Add a new car",
+        "operationId": "addCar",
+        "requestBody": {
+          "description": "Create a new car",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Body"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CarResult"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        },
+        "security": [
+          {
+            "bearer_token": []
+          }
+        ]
+      }
+    },
+    "/car/{carId}": {
+      "get": {
+        "tags": [
+          "car"
+        ],
+        "summary": "Find car by ID",
+        "description": "Returns a single car",
+        "operationId": "getCarById",
+        "parameters": [
+          {
+            "name": "carId",
+            "in": "path",
+            "description": "ID of car to return",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CarDetail"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        },
+        "security": [
+          {
+            "bearer_token": []
+          }
+        ]
+      },
+      "put": {
+        "tags": [
+          "car"
+        ],
+        "summary": "Update an existing car",
+        "description": "Update an existing car by Id",
+        "operationId": "updateCar",
+        "parameters": [
+          {
+            "name": "carId",
+            "in": "path",
+            "description": "ID of car to return",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "Update the cars in the list",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Body"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CarResult"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        },
+        "security": [
+          {
+            "bearer_token": []
+          }
+        ]
+      },
+      "delete": {
+        "tags": [
+          "car"
+        ],
+        "summary": "Deletes a car",
+        "description": "Delete a car",
+        "operationId": "deleteCar",
+        "parameters": [
+          {
+            "name": "carId",
+            "in": "path",
+            "description": "ID of car to return",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Delete"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        },
+        "security": [
+          {
+            "bearer_token": []
+          }
+        ]
+      }
+    },
+    "/auth/register": {
+      "post": {
+        "tags": [
+          "auth"
+        ],
+        "summary": "Create user for member",
+        "description": "Users register to become members",
+        "operationId": "createUser",
+        "requestBody": {
+          "description": "Created user object",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Register"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/User"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid username/password supplied"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/auth/register/admin": {
+      "post": {
+        "tags": [
+          "auth"
+        ],
+        "summary": "Create user for admin",
+        "description": "Superadmin registers the user as admin",
+        "operationId": "createUserAdmin",
+        "requestBody": {
+          "description": "Created user object",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Register"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/User"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid username/password supplied"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        },
+        "security": [
+          {
+            "bearer_token": []
+          }
+        ]
+      }
+    },
+    "/auth/login": {
+      "post": {
+        "tags": [
+          "auth"
+        ],
+        "summary": "Login user",
+        "description": "The user enters self-identification and authentication data",
+        "operationId": "LoginUser",
+        "requestBody": {
+          "description": "Created user object",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Login"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LoginUser"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid username/password supplied"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/user/me": {
+      "get": {
+        "tags": [
+          "user"
+        ],
+        "summary": "The current user",
+        "description": "Displays current user information",
+        "operationId": "currentUser",
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/User"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        },
+        "security": [
+          {
+            "bearer_token": []
+          }
+        ]
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Home": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string",
+            "example": "Ping successfully"
+          }
+        }
+      },
+      "Car": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "example": "5a5f65af-ad71-4995-9bfe-e6603fed5d8e"
+          },
+          "name": {
+            "type": "string",
+            "example": "BMW"
+          },
+          "image": {
+            "type": "string",
+            "example": "./images/car01.png"
+          },
+          "type": {
+            "type": "string",
+            "example": "medium",
+            "enum": [
+              "small",
+              "medium",
+              "large"
+            ]
+          },
+          "rentPerDay": {
+            "type": "integer",
+            "format": "int32",
+            "example": 100000
+          },
+          "capacity": {
+            "type": "integer",
+            "format": "int32",
+            "example": 4
+          },
+          "description": {
+            "type": "string",
+            "format": "int64",
+            "example": "string"
+          },
+          "availableAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "CarDetail": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "example": "5a5f65af-ad71-4995-9bfe-e6603fed5d8e"
+          },
+          "name": {
+            "type": "string",
+            "example": "BMW"
+          },
+          "image": {
+            "type": "string",
+            "example": "./images/car01.png"
+          },
+          "type": {
+            "type": "string",
+            "example": "medium",
+            "enum": [
+              "small",
+              "medium",
+              "large"
+            ]
+          },
+          "rentPerDay": {
+            "type": "integer",
+            "format": "int32",
+            "example": 100000
+          },
+          "capacity": {
+            "type": "integer",
+            "format": "int32",
+            "example": 4
+          },
+          "description": {
+            "type": "string",
+            "format": "int64",
+            "example": "string"
+          },
+          "availableAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "created": {
+            "$ref": "#/components/schemas/User"
+          },
+          "updated": {
+            "$ref": "#/components/schemas/User"
+          },
+          "deleted": {
+            "$ref": "#/components/schemas/User"
+          }
+        }
+      },
+      "CarResult": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "example": "5a5f65af-ad71-4995-9bfe-e6603fed5d8e"
+          },
+          "name": {
+            "type": "string",
+            "example": "BMW"
+          },
+          "image": {
+            "type": "string",
+            "example": "./images/car01.png"
+          },
+          "type": {
+            "type": "string",
+            "example": "medium",
+            "enum": [
+              "small",
+              "medium",
+              "large"
+            ]
+          },
+          "rentPerDay": {
+            "type": "integer",
+            "format": "int32",
+            "example": 100000
+          },
+          "capacity": {
+            "type": "integer",
+            "format": "int32",
+            "example": 4
+          },
+          "description": {
+            "type": "string",
+            "format": "int64",
+            "example": "string"
+          },
+          "availableAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "deletedAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "createdBy": {
+            "type": "string",
+            "example": "5e9177cf-a722-4a59-9965-f46114c66f65"
+          },
+          "updatedBy": {
+            "type": "string",
+            "example": "5e9177cf-a722-4a59-9965-f46114c66f65"
+          },
+          "deletedBy": {
+            "type": "string",
+            "example": "5e9177cf-a722-4a59-9965-f46114c66f65"
+          }
+        }
+      },
+      "Body": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "example": "BMW"
+          },
+          "image": {
+            "type": "string",
+            "example": "./images/car01.png"
+          },
+          "type": {
+            "type": "string",
+            "example": "medium",
+            "enum": [
+              "small",
+              "medium",
+              "large"
+            ]
+          },
+          "rentPerDay": {
+            "type": "integer",
+            "format": "int32",
+            "example": 100000
+          },
+          "capacity": {
+            "type": "integer",
+            "format": "int32",
+            "example": 4
+          },
+          "description": {
+            "type": "string",
+            "format": "int64",
+            "example": "string"
+          },
+          "availableAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "Delete": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string",
+            "example": "Delete Successfully"
+          }
+        }
+      },
+      "User": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "example": "5e9177cf-a722-4a59-9965-f46114c66f65"
+          },
+          "name": {
+            "type": "string",
+            "example": "User"
+          },
+          "email": {
+            "type": "string",
+            "example": "user123@mail.com"
+          },
+          "encryptedPassword": {
+            "type": "string",
+            "example": "$2b$10$f.SGd6EZ3lw0x/7MipjvXOv.AcWGp2uhu3hnV1E6fM8ypBijN25Au"
+          },
+          "phoneNumber": {
+            "type": "string",
+            "example": 8123456789
+          },
+          "address": {
+            "type": "string",
+            "example": "Villa Indah 2"
+          },
+          "role": {
+            "type": "string",
+            "example": "ADMIN",
+            "enum": [
+              "SUPERADMIN",
+              "ADMIN",
+              "MEMBER"
+            ]
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "Register": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string",
+            "example": "user123@mail.com"
+          },
+          "password": {
+            "type": "string",
+            "example": "user12345"
+          },
+          "name": {
+            "type": "string",
+            "example": "User"
+          },
+          "address": {
+            "type": "string",
+            "example": "Villa Indah 2"
+          },
+          "phoneNumber": {
+            "type": "string",
+            "example": 8123456789
+          }
+        }
+      },
+      "Login": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string",
+            "example": "user123@mail.com"
+          },
+          "password": {
+            "type": "string",
+            "example": "user12345"
+          }
+        }
+      },
+      "LoginUser": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "example": "5e9177cf-a722-4a59-9965-f46114c66f65"
+          },
+          "name": {
+            "type": "string",
+            "example": "User"
+          },
+          "email": {
+            "type": "string",
+            "example": "user123@mail.com"
+          },
+          "encryptedPassword": {
+            "type": "string",
+            "example": "$2b$10$f.SGd6EZ3lw0x/7MipjvXOv.AcWGp2uhu3hnV1E6fM8ypBijN25Au"
+          },
+          "phoneNumber": {
+            "type": "string",
+            "example": 8123456789
+          },
+          "address": {
+            "type": "string",
+            "example": "Villa Indah 2"
+          },
+          "role": {
+            "type": "string",
+            "example": "ADMIN",
+            "enum": [
+              "SUPERADMIN",
+              "ADMIN",
+              "MEMBER"
+            ]
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "token": {
+            "type": "string",
+            "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjVlOTE3N2NmLWE3MjItNGE1OS05OTY1LWY0NjExNGM2NmY2NSIsImlhdCI6MTY5ODA0MDU1Nn0.VwYhej8MCEKQchcZ7nCI-PYQXdq4JQyacv4eN7ourFc"
+          }
+        }
+      },
+      "ApiResponse": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "type": {
+            "type": "string"
+          },
+          "message": {
+            "type": "string"
+          }
+        },
+        "xml": {
+          "name": "##default"
+        }
+      }
+    },
+    "securitySchemes": {
+      "api_key": {
+        "type": "apiKey",
+        "name": "api_key",
+        "in": "header"
+      },
+      "bearer_token": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    }
+  }
+}
