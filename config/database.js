@@ -32,11 +32,12 @@
 const { Pool } = require('pg');
 
 const pool = new Pool({
-    username: "postgres",
-    password: "admin",
-    database: "db_car_rental_development",
-    host: "localhost",
-    port: 5432,
-});
+  connectionString: process.env.POSTGRES_URL + "?sslmode=require",
+})
+
+pool.connect((err) => {
+  if (err) throw err
+  console.log("Connect to PostgreSQL successfully!");
+})
 
 module.exports = pool;
